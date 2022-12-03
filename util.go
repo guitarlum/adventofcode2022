@@ -30,6 +30,7 @@ func readFileAsNumbers(path string) []int {
 func readFileAsStringArray(path string) []string {
 	file, err := os.Open(path)
 	if err != nil {
+		fmt.Println("file doesn't exist")
 		return nil
 	}
 	defer file.Close()
