@@ -26,5 +26,11 @@ func main() {
 		fmt.Fprintln(w, "score of 3: ", calcRucksackOf3(lines))
 	})
 
+	http.HandleFunc("/4", func(w http.ResponseWriter, r *http.Request) {
+		var lines []string = readFileAsStringArray("input/day04.txt")
+		fmt.Fprintln(w, "score: ", calcCoverage(lines))
+		fmt.Fprintln(w, "score singles: ", calcCoverageSingle(lines))
+	})
+
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
