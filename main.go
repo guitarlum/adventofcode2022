@@ -32,5 +32,11 @@ func main() {
 		fmt.Fprintln(w, "score singles: ", calcCoverageSingle(lines))
 	})
 
+	http.HandleFunc("/5", func(w http.ResponseWriter, r *http.Request) {
+		var lines []string = readFileAsStringArray("input/day05.txt")
+		fmt.Fprintln(w, "crates: ", moveCrates(lines, false))
+		fmt.Fprintln(w, "crates after crane 9001: ", moveCrates(lines, true))
+	})
+
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
