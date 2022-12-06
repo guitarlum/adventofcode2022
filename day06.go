@@ -1,19 +1,20 @@
 package main
 
 func FindStartOfPacket(line string, messageLength int) int {
-	var chars int = 0
-	m := make(map[byte]int)
-	for i, j := 0, messageLength-1; i < len(line); i, j = i+1, j+1 {
-		for k := range m {
-			delete(m, k)
-		}
+	for i, j, m := 0, messageLength-1, make(map[byte]int); i < len(line); i, j, m = i+1, j+1, clear(m) {
 		for c := i; c <= j; c++ {
 			m[line[c]]++
 		}
 		if len(m) == messageLength {
-			chars = j + 1
-			break
+			return j + 1
 		}
 	}
-	return chars
+	return 0
+}
+
+func clear(m map[byte]int) map[byte]int {
+	for k := range m {
+		delete(m, k)
+	}
+	return m
 }
