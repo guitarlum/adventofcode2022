@@ -38,5 +38,11 @@ func main() {
 		fmt.Fprintln(w, "crates after crane 9001: ", moveCrates(lines, true))
 	})
 
+	http.HandleFunc("/6", func(w http.ResponseWriter, r *http.Request) {
+		var lines []string = readFileAsStringArray("input/day06.txt")
+		fmt.Fprintln(w, "4 char package: ", FindStartOfPacket(lines[0], 4))
+		fmt.Fprintln(w, "14 char package: ", FindStartOfPacket(lines[0], 14))
+	})
+
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
