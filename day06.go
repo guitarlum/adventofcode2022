@@ -1,6 +1,6 @@
 package main
 
-func FindStartOfPacket(line string, messageLength int) int {
+func findStartOfPacket(line string, messageLength int) int {
 	for i, j, m := 0, messageLength-1, make(map[byte]int); i < len(line); i, j, m = i+1, j+1, clear(m) {
 		for c := i; c <= j; c++ {
 			m[line[c]]++

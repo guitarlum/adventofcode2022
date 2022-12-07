@@ -40,8 +40,14 @@ func main() {
 
 	http.HandleFunc("/6", func(w http.ResponseWriter, r *http.Request) {
 		var lines []string = readFileAsStringArray("input/day06.txt")
-		fmt.Fprintln(w, "4 char package: ", FindStartOfPacket(lines[0], 4))
-		fmt.Fprintln(w, "14 char package: ", FindStartOfPacket(lines[0], 14))
+		fmt.Fprintln(w, "4 char package: ", findStartOfPacket(lines[0], 4))
+		fmt.Fprintln(w, "14 char package: ", findStartOfPacket(lines[0], 14))
+	})
+
+	http.HandleFunc("/7", func(w http.ResponseWriter, r *http.Request) {
+		var lines []string = readFileAsStringArray("input/day07.txt")
+		fmt.Fprintln(w, "folders sum below 1kk: ", calcDirectorySize(lines))
+		fmt.Fprintln(w, "deleteFolder size: ", findDeleteFolder(lines))
 	})
 
 	log.Fatal(http.ListenAndServe(":8081", nil))
