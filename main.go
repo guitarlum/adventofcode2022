@@ -50,5 +50,12 @@ func main() {
 		fmt.Fprintln(w, "deleteFolder size: ", findDeleteFolder(lines))
 	})
 
+	http.HandleFunc("/8", func(w http.ResponseWriter, r *http.Request) {
+		treemap := readFileAsIntMap("input/day08.txt")
+		trees, scenicScore := findTrees(treemap)
+		fmt.Fprintln(w, "visible trees: ", trees)
+		fmt.Fprintln(w, "highest scenic score: ", scenicScore)
+	})
+
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }

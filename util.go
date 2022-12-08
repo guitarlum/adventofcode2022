@@ -27,6 +27,25 @@ func readFileAsNumbers(path string) []int {
 	return numbers
 }
 
+func readFileAsIntMap(path string) [][]int {
+	var lines []string = readFileAsStringArray(path)
+	var input [][]int = make([][]int, len(lines))
+	for x, v := range lines {
+		input[x] = make([]int, len(v))
+		for y := 0; y < len(v); y++ {
+			i, err := strconv.Atoi(string(v[y]))
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(2)
+			}
+			input[x][y] = i
+		}
+
+	}
+
+	return input
+}
+
 func readFileAsStringArray(path string) []string {
 	file, err := os.Open(path)
 	if err != nil {
