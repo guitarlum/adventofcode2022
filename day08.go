@@ -18,11 +18,10 @@ func findTrees(treeMap [][]int) (int, int) {
 					inSight = true
 					break
 				}
+				leftScore++
 				if treeMap[y][walkX] >= cell {
-					leftScore++
 					break
 				}
-				leftScore++
 			}
 
 			for walkX := x; walkX <= len(row)-1; {
@@ -31,11 +30,10 @@ func findTrees(treeMap [][]int) (int, int) {
 					inSight = true
 					break
 				}
+				rightScore++
 				if treeMap[y][walkX] >= cell {
-					rightScore++
 					break
 				}
-				rightScore++
 			}
 
 			for walkY := y; walkY >= 0; {
@@ -44,11 +42,10 @@ func findTrees(treeMap [][]int) (int, int) {
 					inSight = true
 					break
 				}
+				upScore++
 				if treeMap[walkY][x] >= cell {
-					upScore++
 					break
 				}
-				upScore++
 			}
 
 			for walkY := y; walkY <= len(treeMap)-1; {
@@ -57,11 +54,10 @@ func findTrees(treeMap [][]int) (int, int) {
 					inSight = true
 					break
 				}
+				downScore++
 				if treeMap[walkY][x] >= cell {
-					downScore++
 					break
 				}
-				downScore++
 			}
 
 			currentScore := upScore * downScore * leftScore * rightScore
