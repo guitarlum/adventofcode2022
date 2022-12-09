@@ -11,12 +11,11 @@ type point struct {
 	y int
 }
 
-func calcMapCoverage(lines []string) int {
+func calcMapCoverage(lines []string, length int) int {
 	visitedMap := make(map[point]int)
-	var h point = point{0, 0}
-	var t point = point{0, 0}
+	rope := make([]point, length+1)
 
-	visitedMap[t]++
+	visitedMap[rope[length]]++
 
 	for _, v := range lines {
 		parts := strings.Split(v, " ")
@@ -24,31 +23,29 @@ func calcMapCoverage(lines []string) int {
 		for i := 0; i < distance; i++ {
 			switch parts[0] {
 			case "U":
-				h.y++
-				if isTooFar(h, t) {
-					t.x = h.x
-					t.y = h.y - 1
-				}
+				rope[0].y++
 			case "D":
-				h.y--
-				if isTooFar(h, t) {
-					t.x = h.x
-					t.y = h.y + 1
-				}
+				rope[0].y--
 			case "L":
-				h.x--
-				if isTooFar(h, t) {
-					t.y = h.y
-					t.x = h.x + 1
-				}
+				rope[0].x--
 			case "R":
-				h.x++
-				if isTooFar(h, t) {
-					t.y = h.y
-					t.x = h.x - 1
+				rope[0].x++
+			}
+			for j := 0; j < length; j++ {
+				if isTooFar(rope[j], rope[j+1]) {
+					if rope[j].y-rope[j+1].y > 0 {
+						rope[j+1].y++
+					} else if rope[j].y-rope[j+1].y < 0 {
+						rope[j+1].y--
+					}
+					if rope[j].x-rope[j+1].x > 0 {
+						rope[j+1].x++
+					} else if rope[j].x-rope[j+1].x < 0 {
+						rope[j+1].x--
+					}
 				}
 			}
-			visitedMap[t]++
+			visitedMap[rope[length]]++
 		}
 	}
 	return len(visitedMap)
