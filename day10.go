@@ -1,19 +1,21 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 )
 
-func runCycles(lines []string, cycles []int) int {
-	var sum int = 0
-	var cycleCounter int = 1
-	var frequency int = 0
+func runCycles(lines []string, cycles []int, w http.ResponseWriter) int {
+	sum := 0
+	cycleCounter := 1
+	frequency := 0
 	instruction := make(map[int]int)
-	var x int = 1
+	x := 1
 	readNext := true
 
-	for i := 0; cycleCounter <= cycles[len(cycles)-1]; cycleCounter++ {
+	for i := 0; cycleCounter <= 240; cycleCounter++ {
 
 		if readNext {
 			if i == (len(lines)) {
@@ -29,7 +31,14 @@ func runCycles(lines []string, cycles []int) int {
 			}
 		}
 
-		if cycleCounter == cycles[frequency] {
+		currentPosition := cycleCounter%40 - 1
+		if x >= currentPosition-1 && x <= currentPosition+1 {
+			fmt.Fprintf(w, "#")
+		} else {
+			fmt.Fprintf(w, ".")
+		}
+
+		if cycleCounter <= cycles[len(cycles)-1] && cycleCounter == cycles[frequency] {
 			sum += x * cycles[frequency]
 			frequency++
 		}
@@ -38,6 +47,10 @@ func runCycles(lines []string, cycles []int) int {
 			x += instruction[cycleCounter]
 			i++
 			readNext = true
+		}
+
+		if cycleCounter%40 == 0 {
+			fmt.Fprintln(w)
 		}
 	}
 
