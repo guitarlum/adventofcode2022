@@ -17,14 +17,11 @@ type Monkee struct {
 	inspectCounter   int
 }
 
-func chaseMonkyes(lines []string) int {
-	monkees := extractMonkees(lines)
+func chaseMonkyes(lines []string, rounds int) int {
+	monkees, lcm := extractMonkees(lines)
 
-	for i := 0; i < 20; i++ {
+	for i := 0; i < rounds; i++ {
 		for mm, m := range monkees {
-			// if len(m.items) > 0 {
-			// 	monkees[mm].inspectCounter++
-			// }
 			for _, item := range m.items {
 				switch m.operation {
 				case "+":
@@ -36,7 +33,11 @@ func chaseMonkyes(lines []string) int {
 						item *= m.operationValue
 					}
 				}
-				item /= 3
+				if rounds <= 20 {
+					item /= 3
+				} else {
+					item %= lcm
+				}
 
 				if item%m.testDivisor == 0 {
 					monkees[m.trueMonkeeIndex].items = append(monkees[m.trueMonkeeIndex].items, item)
@@ -45,6 +46,7 @@ func chaseMonkyes(lines []string) int {
 				}
 				monkees[mm].inspectCounter++
 			}
+
 			monkees[mm].items = nil
 		}
 	}
@@ -56,8 +58,9 @@ func chaseMonkyes(lines []string) int {
 	return monkees[6].inspectCounter * monkees[7].inspectCounter
 }
 
-func extractMonkees(lines []string) []Monkee {
+func extractMonkees(lines []string) ([]Monkee, int) {
 	var monkees []Monkee
+	lcm := 1
 	for i := 0; i < len(lines); i = i + 7 {
 		var monkee Monkee
 
@@ -76,6 +79,7 @@ func extractMonkees(lines []string) []Monkee {
 		divisPart := strings.Split(lines[i+3], " ")
 		divisor, _ := strconv.Atoi(divisPart[len(divisPart)-1])
 		monkee.testDivisor = divisor
+		lcm *= divisor
 
 		trueMonkeePart := strings.Split(lines[i+4], " ")
 		trueMonkee, _ := strconv.Atoi(trueMonkeePart[len(trueMonkeePart)-1])
@@ -87,9 +91,5 @@ func extractMonkees(lines []string) []Monkee {
 
 		monkees = append(monkees, monkee)
 	}
-	return monkees
-}
-
-func removeFromSlice(slice []int, s int) []int {
-	return append(slice[:s], slice[s+1:]...)
+	return monkees, lcm
 }
