@@ -80,6 +80,16 @@ func main() {
 		fmt.Fprintln(w, "shortestPath start from a", findShortestPath(readFileAsStringArray("input/day12.txt"), 'a'))
 	})
 
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	http.HandleFunc("/13", func(w http.ResponseWriter, r *http.Request) {
+		sum, decoderKey := calcSumOfIndicese(readFileAsStringArray("input/day13.txt"))
+		fmt.Fprintln(w, "sum of indices ", sum)
+		fmt.Fprintln(w, "decoder key", decoderKey)
+	})
 
+	http.HandleFunc("/14", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "landed sand ", calcSandAtRest(readFileAsStringArray("input/day14.txt"), false))
+		fmt.Fprintln(w, "landed sand with floor", calcSandAtRest(readFileAsStringArray("input/day14.txt"), true))
+	})
+
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
