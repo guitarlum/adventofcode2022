@@ -21,7 +21,6 @@ func putSand(cave *[200][700]int, maxDepth int) int {
 nextSand:
 	for {
 		sand := Point{500, 0}
-	keepFalling:
 		for {
 			if sand.y >= maxDepth {
 				return landed
@@ -37,14 +36,14 @@ nextSand:
 						if sand.y == 0 && sand.x == 500 {
 							return landed
 						}
-						goto nextSand
+						continue nextSand
 					} else {
 						sand.x++
-						goto keepFalling
+						continue
 					}
 				} else {
 					sand.x--
-					goto keepFalling
+					continue
 				}
 			}
 		}
