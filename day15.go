@@ -81,6 +81,9 @@ func findMissingBeacon(lines []string) int {
 	sum := 0
 	for y := 0; y <= 4000000; y++ {
 		go findX(pairs, y, &sum)
+		if sum != 0 {
+			return sum
+		}
 	}
 	return sum
 }
@@ -104,6 +107,7 @@ func findX(pairs []SBPair, y int, sum *int) {
 		}
 		if upper < distress[i+1].from {
 			*sum = ((upper + 1) * 4000000) + y
+			return
 		}
 	}
 }
