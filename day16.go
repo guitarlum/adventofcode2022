@@ -61,19 +61,48 @@ func calcPressure(lines []string) int {
 	sort.Sort(ByPressure(valuePipes))
 
 	currentPipe := "AA"
-	for i := 0; i < 30; i++ {
-		highestNextPipe := findHighest(currentPipe, distances, valuePipes, 30-i)
-		if highestNextPipe.pressureGain != 0 {
-			sum += highestNextPipe.pressureGain
-			i += highestNextPipe.distance + 1
-			currentPipe = highestNextPipe.targetPipe.name
-			remove(valuePipes, highestNextPipe.targetPipe)
-		} else {
-			break
-		}
-	}
+	// for i := 0; i < 30; i++ {
+	// 	highestNextPipe := findHighest(currentPipe, distances, valuePipes, 30-i)
+	// 	if highestNextPipe.pressureGain != 0 {
+	// 		sum += highestNextPipe.pressureGain
+	// 		i += highestNextPipe.distance + 1
+	// 		currentPipe = highestNextPipe.targetPipe.name
+	// 		remove(valuePipes, highestNextPipe.targetPipe)
+	// 	} else {
+	// 		break
+	// 	}
+	// }
+	var pipesList []Pipe
+	pipesList = append(pipesList, pipes[currentPipe])
+	bruteForceIt(&sum, pipes[currentPipe], valuePipes[:], distances, 0, 0, pipesList[:])
 
 	return sum
+}
+
+func bruteForceIt(highest *int, current Pipe, valuePipes []Pipe, distances map[FromTo]int, i int, sum int, pipesList []Pipe) {
+	timeLeft := 30 - i
+
+	if sum > *highest {
+		*highest = sum
+	}
+
+	if timeLeft <= 0 {
+		return
+	}
+
+	for _, p := range valuePipes {
+		if !containsPipe(pipesList, p) {
+			distance := distances[FromTo{current.name, p.name}]
+			if (distance + 1) > timeLeft {
+				continue
+			}
+			bruteForceIt(highest, p, valuePipes, distances, i+distance+1, sum+((timeLeft-distance-1)*p.pressure), append(pipesList, p)[:])
+		}
+	}
+}
+
+func remove(slice []Pipe, s int) []Pipe {
+	return append(slice[:s], slice[s+1:]...)
 }
 
 func findHighest(currentPipe string, distances map[FromTo]int, valuePipes []Pipe, timeLeft int) Action {
@@ -93,14 +122,14 @@ func findHighest(currentPipe string, distances map[FromTo]int, valuePipes []Pipe
 	return bestMove
 }
 
-func remove(s []Pipe, r Pipe) []Pipe {
-	for i, v := range s {
-		if v.name == r.name {
-			return append(s[:i], s[i+1:]...)
-		}
-	}
-	return s
-}
+// func remove(s []Pipe, r Pipe) []Pipe {
+// 	for i, v := range s {
+// 		if v.name == r.name {
+// 			return append(s[:i], s[i+1:]...)
+// 		}
+// 	}
+// 	return s
+// }
 
 func findShortestDistance(start, from, to string, pipes map[string]Pipe, shortest *int, steps int, history []string) {
 	if contains(history, from) {
@@ -116,6 +145,15 @@ func findShortestDistance(start, from, to string, pipes map[string]Pipe, shortes
 		history = append(history, from)
 		findShortestDistance(start, v, to, pipes, shortest, steps+1, history[:])
 	}
+}
+
+func containsPipe(s []Pipe, e Pipe) bool {
+	for _, a := range s {
+		if a.name == e.name {
+			return true
+		}
+	}
+	return false
 }
 
 func contains(s []string, e string) bool {
